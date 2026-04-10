@@ -1,5 +1,5 @@
 # Stage 1: Build the React app
-FROM node:18-alpine AS build
+FROM node:25-alpine AS build
 ARG NODE_ENV=production
 ENV REACT_APP_API_URL=http://localhost:3001
 WORKDIR /app
