@@ -4,7 +4,7 @@ ARG NODE_ENV=production
 ENV REACT_APP_API_URL=http://localhost:3001
 WORKDIR /app
 COPY package*.json .
-RUN npm install
+RUN npm install --omit=dev
 COPY public ./public
 COPY src ./src
 RUN npm run build
