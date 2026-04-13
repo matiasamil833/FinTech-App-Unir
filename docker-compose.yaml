@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-fintech_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fintech_pass123}
+      POSTGRES_DB: ${POSTGRES_DB:-fintech_db}
+    volumes:
+      - db_data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-fintech_user} -d ${POSTGRES_DB:-fintech_db}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - fintech-network
+  backend:
+    container_name: backend
+    build: ./backend
+    ports:
+      - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - fintech-network
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - "3000:80"
+# ========================================
+# Volume Configuration
+# ========================================
+volumes:
+  db_data:
+    name: fintech-db-data
+    driver: local
+# ========================================
+# Network Configuration
+# ========================================
+networks:
+  fintech-network:
+    name: fintech-network
+    driver: bridge
