@@ -8,8 +8,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-fintech_db}
     volumes:
       - db_data:/var/lib/postgresql
-    ports:
-      - "5432:5432"
     restart: unless-stopped
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-fintech_user} -d ${POSTGRES_DB:-fintech_db}']
